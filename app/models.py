@@ -24,7 +24,7 @@ class SubMenu(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
-    title = Column(String, nullable=False)
+    title = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=False)
     parent_id = Column(UUID(as_uuid=True),
                        ForeignKey('menu.id', ondelete='CASCADE'))
@@ -39,7 +39,7 @@ class Dish(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
-    title = Column(String, nullable=False)
+    title = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=False)
     price = Column(String, nullable=False)
     parent_id = Column(UUID(as_uuid=True),
