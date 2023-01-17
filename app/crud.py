@@ -1,14 +1,27 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+
 import models
 import schemas
-from uuid import UUID, uuid4
 
 
-def count_submenus(db: Session):
-    # return db.query(models.SubMenu).filter(models.SubMenu.parent_id ==)
-    pass
+def count_submenus(db: Session, id: str):
+    parent = db.query(models.Menu).filter(models.Menu.id == id).first()
+    return len(parent.submenus)
+
+
+def count_dishes(db: Session, id: str):
+    return db.query(
+        models.Dish).join(models.SubMenu,
+                          models.Dish.parent_id == models.SubMenu.id
+                          ).join(models.Menu,
+                                 models.Menu.id == models.SubMenu.parent_id
+                                 ).filter(models.Menu.id == id).count()
+
+
+def dishes_for_submenu(db: Session, id: str):
+    parent = db.query(models.SubMenu).filter(models.SubMenu.id == id).first()
+    return len(parent.dishes)
 
 
 def get_menus(db: Session):
@@ -16,7 +29,10 @@ def get_menus(db: Session):
 
 
 def get_one_menu(db: Session, id: str):
-    return db.query(models.Menu).filter(models.Menu.id == id).first()
+    menu = db.query(models.Menu).filter(models.Menu.id == id).first()
+    if menu is None:
+        raise HTTPException(status_code=404, detail="menu not found")
+    return menu
 
 
 def create_menu(db: Session, menu: schemas.MenuCreate):
@@ -54,13 +70,15 @@ def get_submenus(db: Session):
 
 
 def get_one_submenu(db: Session, id: str):
-    one_submenu = db.query(models.SubMenu).filter(models.SubMenu.id == id).first()
+    one_submenu = db.query(models.SubMenu).filter(
+        models.SubMenu.id == id).first()
     if not one_submenu:
         raise HTTPException(status_code=404, detail="submenu not found")
     return one_submenu
 
 
-def create_submenu(db: Session, submenu: schemas.SubMenuCreate, parent_id: str):
+def create_submenu(db: Session, submenu: schemas.SubMenuCreate,
+                   parent_id: str):
     db_item = models.SubMenu(**submenu.dict(), parent_id=parent_id)
     db.add(db_item)
     db.commit()
@@ -123,7 +141,7 @@ def update_dish(db: Session, dish: schemas.DishBase, id: str):
 
 
 def delete_dish(db: Session, id: str):
-    one_dish= get_one_dish(db, id)
+    one_dish = get_one_dish(db, id)
     if not one_dish:
         raise HTTPException(status_code=404, detail="dish not found")
     db.delete(one_dish)

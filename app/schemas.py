@@ -1,6 +1,10 @@
-from pydantic import BaseModel
+from uuid import UUID
 
-from uuid import UUID, uuid4
+from pydantic import BaseModel, validator
+
+from database import get_db
+
+db = get_db()
 
 
 class MenuBase(BaseModel):
@@ -53,3 +57,7 @@ class Dish(DishBase):
 
     class Config:
         orm_mode = True
+
+    @validator('price')
+    def change_price(cls, price):
+        return str(round(float(price), 2))
