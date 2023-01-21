@@ -42,12 +42,16 @@ cd app
 ```
 5. Создать .env со следующими параметрами:
 ```
-database_hostname=localhost
+database_hostname=db
 database_password=postgres
 database_name=fastapi
 database_username=postgres
 ```
 6. Запустить проект:
 ```bash
-uvicorn main:app --reload
+docker-compose up -d
+```
+7. Запустить тесты:
+```bash
+docker-compose -f docker-compose.tests.yml up -d
 ```
