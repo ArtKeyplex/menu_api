@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, validator
 
-from database import get_db
+from .database import get_db
 
 db = get_db()
 
