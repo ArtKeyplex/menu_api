@@ -1,7 +1,8 @@
+import requests
 import pytest
 import uuid
 from app.utils import ENDPOINT
-from .fake_db import client
+
 
 @pytest.fixture(autouse=True)
 def clean(get_menu_id):
@@ -60,45 +61,45 @@ class TestDishes:
 
 
 def create_menu(info):
-    return client.post(ENDPOINT + '/menus', json=info)
+    return requests.post(ENDPOINT + '/menus', json=info)
 
 
 def delete_menu(menu_id):
-    return client.delete(ENDPOINT + f'/menus/{menu_id}')
+    return requests.delete(ENDPOINT + f'/menus/{menu_id}')
 
 
 def create_submenu(menu_id, info_submenu):
-    return client.post(ENDPOINT + f'/menus/{menu_id}/submenus',
+    return requests.post(ENDPOINT + f'/menus/{menu_id}/submenus',
                          json=info_submenu)
 
 
 def create_dish(menu_id, submenu_id, info_dish):
-    return client.post(
+    return requests.post(
         ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}/dishes',
         json=info_dish
     )
 
 
 def update_dish(menu_id, submenu_id, dish_id, info):
-    return client.patch(
+    return requests.patch(
         ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}',
         json=info
     )
 
 
 def list_dishes(menu_id, submenu_id):
-    return client.get(
+    return requests.get(
         ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}/dishes'
     )
 
 
 def get_dish(menu_id, submenu_id, dish_id):
-    return client.get(
+    return requests.get(
         ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
     )
 
 
 def delete_dish(menu_id, submenu_id, dish_id):
-    return client.delete(
+    return requests.delete(
         ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}'
     )

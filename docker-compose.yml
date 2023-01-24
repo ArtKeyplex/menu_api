@@ -1,6 +1,22 @@
 version: '3.8'
 
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+    restart: on-failure
+
+
   db:
     image: postgres:15.1-alpine
     environment:
@@ -16,17 +32,7 @@ services:
     networks:
       - mynetwork
 
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    networks:
-      - mynetwork
+
 
 networks:
   mynetwork:
