@@ -1,10 +1,7 @@
 import pytest
-import requests
 import uuid
-
-
-ENDPOINT = 'http://host.docker.internal:8008/api/v1'
-
+from app.utils import ENDPOINT
+from .fake_db import client
 
 @pytest.fixture()
 def info_for_menu():
@@ -35,21 +32,21 @@ def info_for_dishes():
 
 @pytest.fixture()
 def get_menu_id(info_for_menu):
-    create_response = requests.post(ENDPOINT + '/menus', json=info_for_menu)
+    create_response = client.post(ENDPOINT + '/menus', json=info_for_menu)
     return create_response.json()['id']
 
 
 @pytest.fixture()
 def get_submenu_id(get_menu_id, info_for_submenu):
     menu_id = get_menu_id
-    create_response = requests.post(ENDPOINT + f'/menus/{menu_id}/submenus',
+    create_response = client.post(ENDPOINT + f'/menus/{menu_id}/submenus',
                                     json=info_for_submenu)
     return create_response.json()['id']
 
 
 @pytest.fixture()
 def get_dish_id(get_menu_id, get_submenu_id, info_for_dishes):
-    create_response = requests.post(
+    create_response = client.post(
         ENDPOINT + f'/menus/{get_menu_id}/submenus/{get_submenu_id}/dishes',
         json=info_for_dishes)
     return create_response.json()['id']

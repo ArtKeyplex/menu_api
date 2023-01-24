@@ -1,8 +1,7 @@
-import requests
 import pytest
 import uuid
-
-ENDPOINT = 'http://host.docker.internal:8008/api/v1'
+from app.utils import ENDPOINT
+from .fake_db import client
 
 
 @pytest.fixture(autouse=True)
@@ -65,32 +64,32 @@ class TestSubMenu:
 
 
 def create_menu(info):
-    return requests.post(ENDPOINT + '/menus', json=info)
+    return client.post(ENDPOINT + '/menus', json=info)
 
 
 def delete_menu(menu_id):
-    return requests.delete(ENDPOINT + f'/menus/{menu_id}')
+    return client.delete(ENDPOINT + f'/menus/{menu_id}')
 
 
 def create_submenu(menu_id, info_submenu):
-    return requests.post(ENDPOINT + f'/menus/{menu_id}/submenus',
+    return client.post(ENDPOINT + f'/menus/{menu_id}/submenus',
                          json=info_submenu)
 
 
 def update_submenu(menu_id, submenu_id, info):
-    return requests.patch(ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}',
+    return client.patch(ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}',
                           json=info)
 
 
 def list_submenu(menu_id):
-    return requests.get(ENDPOINT + f'/menus/{menu_id}/submenus')
+    return client.get(ENDPOINT + f'/menus/{menu_id}/submenus')
 
 
 def get_submenu(menu_id, submenu_id):
-    return requests.get(ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}')
+    return client.get(ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}')
 
 
 def delete_submenu(menu_id, submenu_id):
-    return requests.delete(
+    return client.delete(
         ENDPOINT + f'/menus/{menu_id}/submenus/{submenu_id}'
     )

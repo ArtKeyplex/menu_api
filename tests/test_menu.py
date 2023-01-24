@@ -1,8 +1,6 @@
-import requests
 import pytest
-
-
-ENDPOINT = 'http://host.docker.internal:8008/api/v1'
+from app.utils import ENDPOINT
+from .fake_db import client
 
 
 @pytest.fixture()
@@ -68,21 +66,21 @@ class TestMenu:
 
 
 def create_menu(info):
-    return requests.post(ENDPOINT + '/menus',
+    return client.post(ENDPOINT + '/menus',
                          json=info)
 
 
 def update_menu(info, id):
-    return requests.patch(ENDPOINT + f'/menus/{id}', json=info)
+    return client.patch(ENDPOINT + f'/menus/{id}', json=info)
 
 
 def get_menu(menu_id):
-    return requests.get(ENDPOINT + f'/menus/{menu_id}')
+    return client.get(ENDPOINT + f'/menus/{menu_id}')
 
 
 def list_menu():
-    return requests.get(ENDPOINT + '/menus')
+    return client.get(ENDPOINT + '/menus')
 
 
 def delete_menu(menu_id):
-    return requests.delete(ENDPOINT + f'/menus/{menu_id}')
+    return client.delete(ENDPOINT + f'/menus/{menu_id}')

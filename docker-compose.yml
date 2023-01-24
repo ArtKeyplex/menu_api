@@ -24,16 +24,10 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8008:8000"
+      - "8000:8000"
     networks:
       - mynetwork
-#  tests:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile-test
-#    volumes:
-#      - .:/app
-#    command: pytest
+
 networks:
   mynetwork:
 
