@@ -1,19 +1,12 @@
 import requests
-import pytest
 from app.utils import ENDPOINT
-
-
-@pytest.fixture()
-def clean(get_menu_id):
-    yield
-    delete_menu(get_menu_id)
 
 
 class TestMenu:
     def test_get_list_menu(self, info_for_menu):
         n = 3
         for _ in range(n):
-            create_response = create_menu(info=info_for_menu)
+            create_response = create_menu(info_for_menu)
             assert create_response.status_code == 201
         list_response = list_menu()
         assert list_response.status_code == 200
@@ -65,9 +58,8 @@ class TestMenu:
         assert menu.status_code == 404
 
 
-def create_menu(info):
-    return requests.post(ENDPOINT + '/menus',
-                         json=info)
+def create_menu(info_for_menu):
+    return requests.post(ENDPOINT + '/menus/', json=info_for_menu)
 
 
 def update_menu(info, id):
